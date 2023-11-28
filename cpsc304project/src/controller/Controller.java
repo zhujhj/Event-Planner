@@ -104,13 +104,13 @@ public class Controller {
         Controller controller = new Controller();
         controller.start();
         Scanner scan = new Scanner(System.in);
-        System.out.println("Enter email: ");
+        System.out.print("Enter email: ");
         String email = scan.nextLine();
-        System.out.println("Enter name: ");
+        System.out.print("Enter name: ");
         String name = scan.nextLine();
-        System.out.println("Enter ID: ");
+        System.out.print("Enter ID: ");
         int id = scan.nextInt();
-        System.out.println("Enter phone #: ");
+        System.out.print("Enter phone #: ");
         int phone = scan.nextInt();
         GuestModel guest = new GuestModel(email, name, id, phone);
         controller.insertGuest(guest);

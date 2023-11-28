@@ -67,49 +67,25 @@ public class DatabaseConnectionHandler {
 	}
 
 	public void deleteGuest(String guestName, int ticketNumber) {
-//		try {
-//			String query = "DELETE FROM guest WHERE name = ? AND ticket_number = ?";
-//			PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query, false);
-//			ps.setString(1, guestName);
-//			ps.setInt(2, ticketNumber);
-//
-//			// int rowCount = ps.executeUpdate();
-//			// if (rowCount == 0) {
-//			// 	System.out.println(WARNING_TAG + " Branch " + branchId + " does not exist!");
-//			// }
-//
-//			connection.commit();
-//
-//			ps.close();
-//		} catch (SQLException e) {
-//			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
-//			rollbackConnection();
-//		}
-	}
+		try {
+			String query = "DELETE FROM guest WHERE name = ? AND ticket_number = ?";
+			PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query, false);
+			ps.setString(1, guestName);
+			ps.setInt(2, ticketNumber);
 
-//	public void insertBranch(BranchModel model) {
-//		try {
-//			String query = "INSERT INTO branch VALUES (?,?,?,?,?)";
-//			PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query, false);
-//			ps.setInt(1, model.getId());
-//			ps.setString(2, model.getName());
-//			ps.setString(3, model.getAddress());
-//			ps.setString(4, model.getCity());
-//			if (model.getPhoneNumber() == 0) {
-//				ps.setNull(5, java.sql.Types.INTEGER);
-//			} else {
-//				ps.setInt(5, model.getPhoneNumber());
-//			}
-//
-//			ps.executeUpdate();
-//			connection.commit();
-//
-//			ps.close();
-//		} catch (SQLException e) {
-//			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
-//			rollbackConnection();
-//		}
-//	}
+			 int rowCount = ps.executeUpdate();
+			 if (rowCount == 0) {
+			 	System.out.println(WARNING_TAG + " Guest " + guestName + " does not exist!");
+			 }
+
+			connection.commit();
+
+			ps.close();
+		} catch (SQLException e) {
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+			rollbackConnection();
+		}
+	}
 
 	public void insertGuest(GuestModel model) {
 		try {
