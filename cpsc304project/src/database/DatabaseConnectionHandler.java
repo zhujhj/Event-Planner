@@ -68,7 +68,7 @@ public class DatabaseConnectionHandler {
 
 	public void deleteGuest(String guestName, int ticketNumber) {
 		try {
-			String query = "DELETE FROM guest WHERE name = ? AND ticket_number = ?";
+			String query = "DELETE FROM guest WHERE guest_name = ? AND ticket_number = ?";
 			PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query, false);
 			ps.setString(1, guestName);
 			ps.setInt(2, ticketNumber);
@@ -91,8 +91,8 @@ public class DatabaseConnectionHandler {
 		try {
 			String query = "INSERT INTO guest VALUES (?,?,?,?)";
 			PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query, false);
-			ps.setString(1, model.getEmail());
-			ps.setString(2, model.getName());
+			ps.setString(1, model.getName());
+			ps.setString(2, model.getEmail());
 			ps.setInt(3, model.getPhoneNumber());
 			ps.setInt(4, model.getTicketNumber());
 
@@ -154,25 +154,25 @@ public class DatabaseConnectionHandler {
 	}
 
 	public void updateGuest(String name, int ticketNumber, int phoneNumber) {
-//		try {
-//			String query = "UPDATE guest SET phone_number = ? WHERE name = ? AND ticket_number = ?";
-//			PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query, false);
-//			ps.setInt(1, phoneNumber);
-//			ps.setString(2, name);
-//			ps.setInt(3, ticketNumber);
-//
-//			// int rowCount = ps.executeUpdate();
-//			// if (rowCount == 0) {
-//			// 	System.out.println(WARNING_TAG + " Branch " + id + " does not exist!");
-//			// }
-//
-//			connection.commit();
-//
-//			ps.close();
-//		} catch (SQLException e) {
-//			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
-//			rollbackConnection();
-//		}
+		try {
+			String query = "UPDATE guest SET phone_number = ? WHERE name = ? AND ticket_number = ?";
+			PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query, false);
+			ps.setInt(1, phoneNumber);
+			ps.setString(2, name);
+			ps.setInt(3, ticketNumber);
+
+			// int rowCount = ps.executeUpdate();
+			// if (rowCount == 0) {
+			// 	System.out.println(WARNING_TAG + " Branch " + id + " does not exist!");
+			// }
+
+			connection.commit();
+
+			ps.close();
+		} catch (SQLException e) {
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+			rollbackConnection();
+		}
 	}
 
 	private void rollbackConnection() {
@@ -187,7 +187,7 @@ public class DatabaseConnectionHandler {
 //		dropGuestTableIfExists();
 
 		try {
-			String query = "CREATE TABLE branch (branch_id integer PRIMARY KEY, branch_name varchar2(20) not null, branch_addr varchar2(50), branch_city varchar2(20) not null, branch_phone integer)";
+			String query = "CREATE TABLE guest (guest_name varchar2(20), guest_email varchar2(20) not null, guest_phone_number INTEGER, guest_ticket_number INTEGER, PRIMARY KEY (guest_name, guest_ticket_number))";
 			PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query, false);
 			ps.executeUpdate();
 			ps.close();
