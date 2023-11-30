@@ -55,6 +55,13 @@ public class ConsoleUI {
         dbHandler.deleteGuest(name, ticketNumber);
     }
 
+    public void deleteVenue() {
+        System.out.println("Delete guest");
+        System.out.print("Enter name: ");
+        String name = scan.nextLine();
+        dbHandler.deleteVenue(name);
+    }
+
     /**
      * TermainalTransactionsDelegate Implementation
      *
@@ -130,7 +137,8 @@ public class ConsoleUI {
                 insertVenue();
                 break;
             case "2":
-                deleteGuest();
+//                deleteGuest();
+                deleteVenue();
                 break;
             case "3":
                 //code

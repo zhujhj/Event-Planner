@@ -89,7 +89,41 @@ public class DatabaseConnectionHandler {
 		}
 	}
 
+	public void deleteVenue(String venueName) {
+		try {
+			String query = "DELETE FROM venue WHERE venue_name = ?";
+			PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query, false);
+			ps.setString(1, venueName);
+
+			int rowCount = ps.executeUpdate();
+			if (rowCount == 0) {
+				System.out.println(WARNING_TAG + " Venue " + venueName + " does not exist!");
+			}
+
+			connection.commit();
+
+			ps.close();
+		} catch (SQLException e) {
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+			rollbackConnection();
+		}
+	}
+
 	public void insertGuest(GuestModel model) {
+
+		try {
+			String q = "INSERT INTO EVENT VALUES ('10',1,'your mom','yo mama')";
+			PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(q), q, false);
+
+			ps.executeUpdate();
+			connection.commit();
+
+			ps.close();
+		} catch (SQLException e) {
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+			rollbackConnection();
+		}
+
 		try {
 			String query = "INSERT INTO GUEST VALUES (?,?,?,?)";
 			PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query, false);
@@ -109,6 +143,20 @@ public class DatabaseConnectionHandler {
 	}
 
 	public void insertVenue(VenueModel model) {
+
+		try {
+			String q = "INSERT INTO EVENT VALUES ('10',1,'your mom','yo mama')";
+			PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(q), q, false);
+
+			ps.executeUpdate();
+			connection.commit();
+
+			ps.close();
+		} catch (SQLException e) {
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+			rollbackConnection();
+		}
+
 		try {
 			String query = "INSERT INTO VENUE VALUES (?,?,?,?)";
 			PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query, false);
