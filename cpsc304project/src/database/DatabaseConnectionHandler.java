@@ -6,6 +6,7 @@ import util.PrintablePreparedStatement;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 
 //import ca.ubc.cs304.model.BranchModel;
 // import ca.ubc.cs304.model.GuestModel;
@@ -125,6 +126,99 @@ public class DatabaseConnectionHandler {
 			rollbackConnection();
 		}
 	}
+
+	public void updateVenue(VenueModel model) {
+		try {
+			String query = "UPDATE VENUE SET Name=?, Address=?, Capacity=? WHERE eventID=?";
+			PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query, false);
+
+			ps.setString(1, model.getName());
+			ps.setString(2, model.getAddress());
+			ps.setInt(3, model.getCapacity());
+			ps.setInt(4, model.getId());
+
+			ps.executeUpdate();
+			connection.commit();
+
+			ps.close();
+		} catch (SQLException e) {
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+			rollbackConnection();
+		}
+	}
+
+	public VenueModel selectVenue(String venueName) {
+		VenueModel venue = null;
+		try {
+			String query = "SELECT * FROM VENUE WHERE Name=?";
+			PreparedStatement ps = connection.prepareStatement(query);
+			ps.setString(1, venueName);
+
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				venue = new VenueModel(
+						rs.getString("Name"),
+						rs.getString("Address"),
+						rs.getInt("Capacity"),
+						rs.getInt("eventID")
+				);
+			}
+
+			rs.close();
+			ps.close();
+		} catch (SQLException e) {
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+		}
+
+		return venue;
+	}
+
+	public VenueModel projectVenue(String venueName, List<String> columns) {
+        VenueModel selectedVenue = selectVenue(venueName);
+
+        VenueModel model = null;
+        try {
+            String query = "SELECT " + columns.toString() + " FROM VENUE WHERE Name=?";
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setString(1, venueName);
+
+            ResultSet rs = ps.executeQuery();
+
+            String name = null;
+            String address = null;
+            int capacity = 0;
+            int eventId = 0;
+
+            if (rs.next()) {
+                for (String column : columns) {
+                    switch (column) {
+                        case "Name":
+                            name = rs.getString("Name");
+                            break;
+                        case "Address":
+                            address = rs.getString("Name");
+                            break;
+                        case "Capacity":
+                            capacity = rs.getInt("Capacity");
+                            break;
+                        case "eventID":
+                            eventId = rs.getInt("eventID");
+                            break;
+                    }
+                }
+
+                // Close resources
+                rs.close();
+                ps.close();
+            }
+            model = new VenueModel(name, address, capacity, eventId);
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+        }
+        return model;
+    }
+
+
 
 //	public BranchModel[] getBranchInfo() {
 //		ArrayList<BranchModel> result = new ArrayList<BranchModel>();
