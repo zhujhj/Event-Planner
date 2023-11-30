@@ -1,6 +1,7 @@
 package database;
 
 import model.GuestModel;
+import model.VenueModel;
 import util.PrintablePreparedStatement;
 
 import java.sql.*;
@@ -89,12 +90,31 @@ public class DatabaseConnectionHandler {
 
 	public void insertGuest(GuestModel model) {
 		try {
-			String query = "INSERT INTO guest VALUES (?,?,?,?)";
+			String query = "INSERT INTO GUEST VALUES (?,?,?,?)";
 			PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query, false);
 			ps.setString(1, model.getName());
 			ps.setString(2, model.getEmail());
 			ps.setInt(3, model.getPhoneNumber());
 			ps.setInt(4, model.getTicketNumber());
+
+			ps.executeUpdate();
+			connection.commit();
+
+			ps.close();
+		} catch (SQLException e) {
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+			rollbackConnection();
+		}
+	}
+
+	public void insertVenue(VenueModel model) {
+		try {
+			String query = "INSERT INTO VENUE VALUES (?,?,?,?)";
+			PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query, false);
+			ps.setString(1, model.getName());
+			ps.setString(2, model.getAddress());
+			ps.setInt(3, model.getCapacity());
+			ps.setInt(4, model.getId());
 
 			ps.executeUpdate();
 			connection.commit();
@@ -185,14 +205,45 @@ public class DatabaseConnectionHandler {
 
 	public void databaseSetup() {
 //		dropGuestTableIfExists();
-
 		try {
-			String query = "CREATE TABLE guest (guest_name varchar2(20), guest_email varchar2(20) not null, guest_phone_number INTEGER, guest_ticket_number INTEGER, PRIMARY KEY (guest_name, guest_ticket_number))";
+//			String query = "CREATE TABLE TEST (guest_name varchar(20), guest_email varchar(20) not null, guest_phone_number INTEGER, guest_ticket_number INTEGER, PRIMARY KEY (guest_name, guest_ticket_number))";
+			String query = "CREATE TABLE Sponsor (\n" +
+					"                         sponsor_name VARCHAR2(255),\n" +
+					"                         amount INTEGER,\n" +
+					"                         request VARCHAR2(255),\n" +
+					"                         phone_number INTEGER,\n" +
+					"                         email VARCHAR2(255),\n" +
+					"                         PRIMARY KEY (sponsor_name, email)\n" +
+					")";
 			PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query, false);
 			ps.executeUpdate();
 			ps.close();
 		} catch (SQLException e) {
 			System.out.println("EXCEPTION " + e.getMessage());
+		}
+
+//		try {
+//			DatabaseMetaData metaData = connection.getMetaData();
+//			ResultSet resultSet = metaData.getTables(null, null, "HI", null);
+//			if (resultSet.next()) {
+//				System.out.println("Table exists.");
+//			} else {
+//				System.out.println("Table  does not exist.");
+//			}
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		}
+
+		try {
+			DatabaseMetaData metaData = connection.getMetaData();
+			ResultSet resultSet = metaData.getTables(null, "ORA_ZHUJASON", "GUEST", null);
+			if (resultSet.next()) {
+				System.out.println("Table 'HI' exists in schema 'ORA_ZHUJASON'.");
+			} else {
+				System.out.println("Table 'HI' does not exist in schema 'ORA_ZHUJASON'.");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 
 		GuestModel guest1 = new GuestModel("Jason", "zhujason4@gmail.com", 444, 1234567);

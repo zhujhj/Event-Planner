@@ -2,6 +2,7 @@ package consoleui;
 
 import database.DatabaseConnectionHandler;
 import model.GuestModel;
+import model.VenueModel;
 
 import java.util.Scanner;
 
@@ -29,6 +30,20 @@ public class ConsoleUI {
         int phone = scan.nextInt();
         GuestModel guest = new GuestModel(name, email, id, phone);
         dbHandler.insertGuest(guest);
+    }
+
+    public void insertVenue() {
+        System.out.println("Insert venue");
+        System.out.print("Enter name: ");
+        String name = scan.nextLine();
+        System.out.print("Enter address: ");
+        String email = scan.nextLine();
+        System.out.print("Enter capacity: ");
+        int id = scan.nextInt();
+        System.out.print("Enter event ID: ");
+        int phone = scan.nextInt();
+        VenueModel venue = new VenueModel(name, email, id, phone);
+        dbHandler.insertVenue(venue);
     }
 
     public void deleteGuest() {
@@ -111,7 +126,8 @@ public class ConsoleUI {
         String option = scan.nextLine();
         switch (option) {
             case "1":
-                insertGuest();
+//                insertGuest();
+                insertVenue();
                 break;
             case "2":
                 deleteGuest();
