@@ -4,6 +4,8 @@ import database.DatabaseConnectionHandler;
 import model.GuestModel;
 import model.VenueModel;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 public class ConsoleUI {
@@ -104,6 +106,28 @@ public class ConsoleUI {
         dbHandler.projectVenue(venueName, null);
     }
 
+    public void aggregateByHaving() {
+        System.out.println("What is the minimum total attendance?: ");
+        int minTotalAttendance = scan.nextInt();
+
+        System.out.println("Getting all events with total attendance greater than specified amount");
+        dbHandler.aggregateVenueCapacityByEventHaving(minTotalAttendance);
+    }
+
+    public void nestedAggregation() {
+        System.out.println("Running nested aggregation to get average venue capacity for all events");
+        int ret = dbHandler.averageVenueCapacity();
+        System.out.println("Average capacity: " + ret);
+    }
+
+    public void division() {
+        System.out.println("Running division");
+        Map<Integer, Double> ret =  dbHandler.calculateAverageCapacityPerEvent();
+        for (Map.Entry<Integer, Double> entry : ret.entrySet()){
+            System.out.println("EventID: " + entry.getKey() + "Average Capacity: " + entry.getValue());
+        }
+    }
+
     /**
      * TermainalTransactionsDelegate Implementation
      *
@@ -196,6 +220,9 @@ public class ConsoleUI {
                 break;
             case "7":
                 projectVenue();
+            case "8":
+                aggregateByHaving();
+                break;
             default:
                 System.out.println("Invalid input");
                 break;

@@ -325,7 +325,110 @@ public class DatabaseConnectionHandler {
 		return ret;
 	}
 
+	// Finds all events where the total capacity from all venues is greater than the specified amount
+	public Map<Integer, Integer> aggregateVenueCapacityByEventHaving(int minTotalCapacity) {
+		Map<Integer, Integer> aggregatedDataMap = new HashMap<>();
 
+		try {
+			String query = "SELECT event_id, SUM(venue_capacity) AS total_capacity " +
+					"FROM VENUE " +
+					"GROUP BY event_id " +
+					"HAVING total_capacity >= ?";
+
+			PreparedStatement ps = connection.prepareStatement(query);
+			ps.setInt(1, minTotalCapacity);
+
+			ResultSet rs = ps.executeQuery();
+
+			while (rs.next()) {
+				int eventId = rs.getInt("event_id");
+				int totalCapacity = rs.getInt("total_capacity");
+
+				aggregatedDataMap.put(eventId, totalCapacity);
+			}
+
+			rs.close();
+			ps.close();
+		} catch (SQLException e) {
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+		}
+
+		return aggregatedDataMap;
+	}
+
+	// returns the average number of venues used by all all events
+	public int averageVenueCapacity() {
+		int result = -1;
+
+		try {
+			// count the number of venues for each event
+			String countQuery = "SELECT event_id, COUNT(venue_name) AS venue_count " +
+					"FROM VENUE " +
+					"GROUP BY event_id";
+
+			PreparedStatement countPs = connection.prepareStatement(countQuery);
+			ResultSet countRs = countPs.executeQuery();
+
+			// get the average venue count
+			String avgQuery = "SELECT AVG(venue_count) AS avg_venue_count " +
+					"FROM (" + countQuery + ") AS event_venue_count";
+
+			PreparedStatement avgPs = connection.prepareStatement(avgQuery);
+			ResultSet avgRs = avgPs.executeQuery();
+
+			if (avgRs.next()) {
+				result = avgRs.getInt("avg_venue_count");
+			}
+
+			countRs.close();
+			countPs.close();
+			avgRs.close();
+			avgPs.close();
+		} catch (SQLException e) {
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+		}
+
+		return result;
+	}
+
+	// Returns average event capacity for each different event
+	public Map<Integer, Double> calculateAverageCapacityPerEvent() {
+		Map<Integer, Double> result = new HashMap<>();
+
+		try {
+			// total capacity for each event
+			String totalCapacityQuery = "SELECT event_id, SUM(venue_capacity) AS total_capacity " +
+					"FROM VENUE " +
+					"GROUP BY event_id";
+
+			// number of venues for each event
+			String venueCountQuery = "SELECT event_id, COUNT(venue_name) AS venue_count " +
+					"FROM VENUE " +
+					"GROUP BY event_id";
+
+			// average capacity per event
+			String averageCapacityQuery = "SELECT tc.event_id, " +
+					"COALESCE(tc.total_capacity / NULLIF(vc.venue_count, 0), 0) AS average_capacity " +
+					"FROM (" + totalCapacityQuery + ") tc " +
+					"JOIN (" + venueCountQuery + ") vc ON tc.event_id = vc.event_id";
+
+			PreparedStatement avgCapacityPs = connection.prepareStatement(averageCapacityQuery);
+			ResultSet avgCapacityRs = avgCapacityPs.executeQuery();
+
+			while (avgCapacityRs.next()) {
+				int eventId = avgCapacityRs.getInt("event_id");
+				double averageCapacity = avgCapacityRs.getDouble("average_capacity");
+				result.put(eventId, averageCapacity);
+			}
+
+			avgCapacityRs.close();
+			avgCapacityPs.close();
+		} catch (SQLException e) {
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+		}
+
+		return result;
+	}
 
 //	public BranchModel[] getBranchInfo() {
 //		ArrayList<BranchModel> result = new ArrayList<BranchModel>();
