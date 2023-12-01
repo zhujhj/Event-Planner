@@ -62,6 +62,21 @@ public class ConsoleUI {
         dbHandler.deleteVenue(name);
     }
 
+    public void updateVenue() {
+        System.out.println("Update venue");
+        System.out.print("Enter venue name: ");
+        String name = scan.nextLine();
+
+        System.out.print("Enter new venue name: ");
+        String newName = scan.nextLine();
+        System.out.print("Enter new address: ");
+        String address = scan.nextLine();
+        System.out.print("Enter new capacity: ");
+        int capacity = scan.nextInt();
+        System.out.print("Enter new event ID: ");
+        int eventId = scan.nextInt();
+        dbHandler.updateVenue(name, address, capacity, eventId);
+    }
     /**
      * TermainalTransactionsDelegate Implementation
      *
@@ -141,7 +156,7 @@ public class ConsoleUI {
                 deleteVenue();
                 break;
             case "3":
-                //code
+                updateVenue();
                 break;
             case "4":
                 //code

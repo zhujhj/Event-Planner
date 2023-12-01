@@ -31,7 +31,7 @@ public class DatabaseConnectionHandler {
 			// Load the Oracle JDBC driver
 			// Note that the path could change for new drivers
 			DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver());
-			connection = DriverManager.getConnection(ORACLE_URL, "ora_zhujason", "a98960727");
+			connection = DriverManager.getConnection(ORACLE_URL, "ora_zwang801", "a46986956");
 			connection.setAutoCommit(false);
 		} catch (SQLException e) {
 			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
@@ -175,15 +175,15 @@ public class DatabaseConnectionHandler {
 		}
 	}
 
-	public void updateVenue(VenueModel model) {
+	public void updateVenue(String name, String address, int capacity, int eventId) {
 		try {
-			String query = "UPDATE VENUE SET Name=?, Address=?, Capacity=? WHERE eventID=?";
+			String query = "UPDATE VENUE SET Name=?, Address=?, Capacity=?, EventId=? WHERE Name=?";
 			PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query, false);
 
-			ps.setString(1, model.getName());
-			ps.setString(2, model.getAddress());
-			ps.setInt(3, model.getCapacity());
-			ps.setInt(4, model.getId());
+			ps.setString(1, name);
+			ps.setString(2, address);
+			ps.setInt(3, capacity);
+			ps.setInt(4, eventId);
 
 			ps.executeUpdate();
 			connection.commit();
