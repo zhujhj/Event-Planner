@@ -387,7 +387,44 @@ public class DatabaseConnectionHandler {
 		return result;
 	}
 
+	// Returns average event capacity for each different event
+	public Map<Integer, Double> calculateAverageCapacityPerEvent() {
+		Map<Integer, Double> result = new HashMap<>();
 
+		try {
+			// total capacity for each event
+			String totalCapacityQuery = "SELECT event_id, SUM(venue_capacity) AS total_capacity " +
+					"FROM VENUE " +
+					"GROUP BY event_id";
+
+			// number of venues for each event
+			String venueCountQuery = "SELECT event_id, COUNT(venue_name) AS venue_count " +
+					"FROM VENUE " +
+					"GROUP BY event_id";
+
+			// average capacity per event
+			String averageCapacityQuery = "SELECT tc.event_id, " +
+					"COALESCE(tc.total_capacity / NULLIF(vc.venue_count, 0), 0) AS average_capacity " +
+					"FROM (" + totalCapacityQuery + ") tc " +
+					"JOIN (" + venueCountQuery + ") vc ON tc.event_id = vc.event_id";
+
+			PreparedStatement avgCapacityPs = connection.prepareStatement(averageCapacityQuery);
+			ResultSet avgCapacityRs = avgCapacityPs.executeQuery();
+
+			while (avgCapacityRs.next()) {
+				int eventId = avgCapacityRs.getInt("event_id");
+				double averageCapacity = avgCapacityRs.getDouble("average_capacity");
+				result.put(eventId, averageCapacity);
+			}
+
+			avgCapacityRs.close();
+			avgCapacityPs.close();
+		} catch (SQLException e) {
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+		}
+
+		return result;
+	}
 
 //	public BranchModel[] getBranchInfo() {
 //		ArrayList<BranchModel> result = new ArrayList<BranchModel>();
