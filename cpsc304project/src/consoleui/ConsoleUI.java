@@ -195,7 +195,8 @@ public class ConsoleUI {
     public void runUI() {
         Scanner scan = new Scanner(System.in);
         // which action
-        System.out.print("1 for insert, 2 for delete, 3 for update, 4 for join, 5 for aggregate by GROUP BY, 6 for select, 7 for project: ");
+        System.out.print("1 for insert, 2 for delete, 3 for update, 4 for join, 5 select, " +
+                "6 for project, 7 for aggregate by GROUP BY, 8 for aggregate by HAVING: ");
         String option = scan.nextLine();
         switch (option) {
             case "1":
@@ -213,15 +214,21 @@ public class ConsoleUI {
                 joinVenue();
                 break;
             case "5":
-                aggregateByGroupBy();
-                break;
-            case "6":
                 selectVenue();
                 break;
-            case "7":
+            case "6":
                 projectVenue();
+            case "7":
+                aggregateByGroupBy();
+                break;
             case "8":
                 aggregateByHaving();
+                break;
+            case "9":
+                nestedAggregation();
+                break;
+            case "10":
+                division();
                 break;
             default:
                 System.out.println("Invalid input");
