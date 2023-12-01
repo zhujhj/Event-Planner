@@ -111,6 +111,26 @@ public class DatabaseConnectionHandler {
 		}
 	}
 
+	public void deleteEvent(String venueName) {
+		try {
+			String query = "DELETE FROM venue WHERE venue_name = ?";
+			PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query, false);
+			ps.setString(1, venueName);
+
+			int rowCount = ps.executeUpdate();
+			if (rowCount == 0) {
+				System.out.println(WARNING_TAG + " Event " + venueName + " does not exist!");
+			}
+
+			connection.commit();
+
+			ps.close();
+		} catch (SQLException e) {
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+			rollbackConnection();
+		}
+	}
+
 	public void insertGuest(GuestModel model) {
 
 		try {
@@ -147,7 +167,7 @@ public class DatabaseConnectionHandler {
 	public void insertVenue(VenueModel model) {
 
 		try {
-			String q = "INSERT INTO EVENT VALUES ('10',1,'your mom','yo mama')";
+			String q = "INSERT INTO EVENT VALUES ('10',2,'event 2','event 2')";
 			PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(q), q, false);
 
 			ps.executeUpdate();
@@ -356,7 +376,7 @@ public class DatabaseConnectionHandler {
 		return aggregatedDataMap;
 	}
 
-	// returns the average number of venues used by all all events
+	// returns the average number of venues used by all events
 	public int averageVenueCapacity() {
 		int result = -1;
 

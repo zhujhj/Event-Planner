@@ -196,7 +196,8 @@ public class ConsoleUI {
         Scanner scan = new Scanner(System.in);
         // which action
         System.out.print("1 for insert, 2 for delete, 3 for update, 4 for join, 5 select, " +
-                "6 for project, 7 for aggregate by GROUP BY, 8 for aggregate by HAVING: ");
+                "6 for project, 7 for aggregate by GROUP BY, 8 for aggregate by HAVING, " +
+                "9 for nested aggregation, 10 for division: ");
         String option = scan.nextLine();
         switch (option) {
             case "1":
