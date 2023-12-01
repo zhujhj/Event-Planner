@@ -201,17 +201,17 @@ public class DatabaseConnectionHandler {
 	public VenueModel selectVenue(String venueName) {
 		VenueModel venue = null;
 		try {
-			String query = "SELECT * FROM VENUE WHERE Name=?";
+			String query = "SELECT * FROM VENUE WHERE VENUE_NAME=?";
 			PreparedStatement ps = connection.prepareStatement(query);
 			ps.setString(1, venueName);
 
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
 				venue = new VenueModel(
-						rs.getString("Name"),
-						rs.getString("Address"),
-						rs.getInt("Capacity"),
-						rs.getInt("eventID")
+						rs.getString("venue_name"),
+						rs.getString("venue_address"),
+						rs.getInt("venue_capacity"),
+						rs.getInt("event_id")
 				);
 			}
 
@@ -220,6 +220,10 @@ public class DatabaseConnectionHandler {
 		} catch (SQLException e) {
 			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
 		}
+		System.out.println(venue.getName());
+		System.out.println(venue.getAddress());
+		System.out.println(venue.getCapacity());
+		System.out.println(venue.getId());
 
 		return venue;
 	}
@@ -242,16 +246,16 @@ public class DatabaseConnectionHandler {
             if (rs.next()) {
                 for (String column : columns) {
                     switch (column) {
-                        case "Name":
+                        case "venue_name":
                             name = rs.getString("Name");
                             break;
-                        case "Address":
+                        case "venue_address":
                             address = rs.getString("Address");
                             break;
-                        case "Capacity":
+                        case "venue_capacity":
                             capacity = rs.getInt("Capacity");
                             break;
-                        case "eventID":
+                        case "event_id":
                             eventId = rs.getInt("eventID");
                             break;
                     }
