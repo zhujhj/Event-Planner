@@ -352,6 +352,40 @@ public class DatabaseConnectionHandler {
 		return aggregatedDataMap;
 	}
 
+	// returns the average number of venues used by all all events
+	public int averageVenueCapacity() {
+		int result = -1;
+
+		try {
+			// count the number of venues for each event
+			String countQuery = "SELECT event_id, COUNT(venue_name) AS venue_count " +
+					"FROM VENUE " +
+					"GROUP BY event_id";
+
+			PreparedStatement countPs = connection.prepareStatement(countQuery);
+			ResultSet countRs = countPs.executeQuery();
+
+			// get the average venue count
+			String avgQuery = "SELECT AVG(venue_count) AS avg_venue_count " +
+					"FROM (" + countQuery + ") AS event_venue_count";
+
+			PreparedStatement avgPs = connection.prepareStatement(avgQuery);
+			ResultSet avgRs = avgPs.executeQuery();
+
+			if (avgRs.next()) {
+				result = avgRs.getInt("avg_venue_count");
+			}
+
+			countRs.close();
+			countPs.close();
+			avgRs.close();
+			avgPs.close();
+		} catch (SQLException e) {
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+		}
+
+		return result;
+	}
 
 
 

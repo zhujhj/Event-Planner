@@ -98,6 +98,12 @@ public class ConsoleUI {
         dbHandler.aggregateVenueCapacityByEventHaving(minTotalAttendance);
     }
 
+    public void nestedAggregation() {
+        System.out.println("Running nested aggregation to get average venue capacity for all events");
+        int ret = dbHandler.averageVenueCapacity();
+        System.out.println("Average capacity: " + ret);
+    }
+
     /**
      * TermainalTransactionsDelegate Implementation
      *
