@@ -52,7 +52,8 @@ CREATE TABLE Venue (
                        capacity INTEGER,
                        event_id INTEGER,
                        PRIMARY KEY (venue_name, venue_address, event_id),
-                       FOREIGN KEY (event_id) REFERENCES Event(event_id)
+                       FOREIGN KEY (event_id) REFERENCES EVENT
+                       ON DELETE CASCADE
 );
 
 CREATE TABLE Vendor (
