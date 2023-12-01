@@ -77,6 +77,18 @@ public class ConsoleUI {
         int eventId = scan.nextInt();
         dbHandler.updateVenue(name, address, capacity, eventId);
     }
+
+    public void joinVenue() {
+        System.out.println("Join venues");
+        System.out.print("Enter venue name 1: ");
+        String name1 = scan.nextLine();
+
+        System.out.print("Enter venue name 2: ");
+        String name2 = scan.nextLine();
+
+        dbHandler.joinVenues(name1, name2);
+    }
+
     /**
      * TermainalTransactionsDelegate Implementation
      *
@@ -159,7 +171,7 @@ public class ConsoleUI {
                 updateVenue();
                 break;
             case "4":
-                //code
+                joinVenue();
                 break;
             default:
                 System.out.println("Invalid input");
