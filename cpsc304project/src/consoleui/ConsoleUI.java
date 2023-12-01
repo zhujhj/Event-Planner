@@ -64,7 +64,7 @@ public class ConsoleUI {
 
     public void updateVenue() {
         System.out.println("Update venue");
-        System.out.print("Enter venue name: ");
+        System.out.print("Enter venue name to update: ");
         String name = scan.nextLine();
 
         System.out.print("Enter new venue name: ");

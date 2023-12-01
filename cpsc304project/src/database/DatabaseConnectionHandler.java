@@ -31,7 +31,7 @@ public class DatabaseConnectionHandler {
 			// Load the Oracle JDBC driver
 			// Note that the path could change for new drivers
 			DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver());
-			connection = DriverManager.getConnection(ORACLE_URL, "ora_zwang801", "a46986956");
+			connection = DriverManager.getConnection(ORACLE_URL, "ora_zhujason", "a98960727");
 			connection.setAutoCommit(false);
 		} catch (SQLException e) {
 			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
@@ -177,13 +177,14 @@ public class DatabaseConnectionHandler {
 
 	public void updateVenue(String name, String address, int capacity, int eventId) {
 		try {
-			String query = "UPDATE VENUE SET Name=?, Address=?, Capacity=?, EventId=? WHERE Name=?";
+			String query = "UPDATE VENUE SET venue_name=?, venue_address=?, venue_capacity=?, event_id=? WHERE venue_name=?";
 			PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query, false);
 
 			ps.setString(1, name);
 			ps.setString(2, address);
 			ps.setInt(3, capacity);
 			ps.setInt(4, eventId);
+			ps.setString(5, name);
 
 			ps.executeUpdate();
 			connection.commit();
@@ -244,7 +245,7 @@ public class DatabaseConnectionHandler {
                             name = rs.getString("Name");
                             break;
                         case "Address":
-                            address = rs.getString("Name");
+                            address = rs.getString("Address");
                             break;
                         case "Capacity":
                             capacity = rs.getInt("Capacity");
