@@ -92,6 +92,20 @@ public class ConsoleUI {
         dbHandler.aggregateVenueTotalEventMaxAttendance();
     }
 
+    public void selectVenue() {
+        System.out.println("Select venue");
+        System.out.print("Enter venue name: ");
+        String venueName = scan.nextLine();
+        dbHandler.selectVenue(venueName);
+    }
+
+    public void projectVenue() {
+        System.out.println("Project venue");
+        System.out.println("Enter venue name: ");
+        String venueName = scan.nextLine();
+        dbHandler.projectVenue(venueName, null);
+    }
+
     public void aggregateByHaving() {
         System.out.println("What is the minimum total attendance?: ");
         int minTotalAttendance = scan.nextInt();
@@ -181,7 +195,7 @@ public class ConsoleUI {
     public void runUI() {
         Scanner scan = new Scanner(System.in);
         // which action
-        System.out.print("1 for insert, 2 for delete, 3 for update, 4 for join, 5 for aggregate by GROUP BY: ");
+        System.out.print("1 for insert, 2 for delete, 3 for update, 4 for join, 5 for aggregate by GROUP BY, 6 for select, 7 for project: ");
         String option = scan.nextLine();
         switch (option) {
             case "1":
@@ -201,6 +215,11 @@ public class ConsoleUI {
             case "5":
                 aggregateByGroupBy();
                 break;
+            case "6":
+                selectVenue();
+                break;
+            case "7":
+                projectVenue();
             case "8":
                 aggregateByHaving();
                 break;
