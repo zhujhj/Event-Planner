@@ -89,6 +89,12 @@ public class ConsoleUI {
         dbHandler.joinVenues(name1, name2);
     }
 
+    public void aggregateByGroupBy() {
+        System.out.println("Getting total attendance per event");
+
+        dbHandler.aggregateVenueTotalEventMaxAttendance();
+    }
+
     /**
      * TermainalTransactionsDelegate Implementation
      *
@@ -156,7 +162,7 @@ public class ConsoleUI {
     public void runUI() {
         Scanner scan = new Scanner(System.in);
         // which action
-        System.out.print("1 for insert, 2 for delete, 3 for update, 4 for display: ");
+        System.out.print("1 for insert, 2 for delete, 3 for update, 4 for join, 5 for aggregate by GROUP BY: ");
         String option = scan.nextLine();
         switch (option) {
             case "1":
@@ -173,8 +179,12 @@ public class ConsoleUI {
             case "4":
                 joinVenue();
                 break;
+            case "5":
+                aggregateByGroupBy();
+                break;
             default:
                 System.out.println("Invalid input");
+                break;
         }
     }
 }

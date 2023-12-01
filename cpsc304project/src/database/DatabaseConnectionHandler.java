@@ -6,7 +6,9 @@ import util.PrintablePreparedStatement;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 //import ca.ubc.cs304.model.BranchModel;
 // import ca.ubc.cs304.model.GuestModel;
@@ -223,7 +225,6 @@ public class DatabaseConnectionHandler {
 	}
 
 	public VenueModel projectVenue(String venueName, List<String> columns) {
-        VenueModel selectedVenue = selectVenue(venueName);
 
         VenueModel model = null;
         try {
@@ -301,6 +302,33 @@ public class DatabaseConnectionHandler {
 		} catch (SQLException e) {
 			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
 		}
+	}
+
+	public Map<Integer, Integer> aggregateVenueTotalEventMaxAttendance() {
+		Map<Integer, Integer> ret = new HashMap<>();
+
+		try {
+			String query = "SELECT event_id, SUM(venue_capacity) AS total_capacity " +
+					"FROM VENUE " +
+					"GROUP BY event_id";
+
+			PreparedStatement ps = connection.prepareStatement(query);
+			ResultSet rs = ps.executeQuery();
+
+			while (rs.next()) {
+				int eventId = rs.getInt("event_id");
+				int totalCapacity = rs.getInt("total_capacity");
+
+				System.out.println("Event ID: " + eventId + ", Total Capacity: " + totalCapacity);
+				ret.put(eventId, totalCapacity);
+			}
+
+			rs.close();
+			ps.close();
+		} catch (SQLException e) {
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+		}
+		return ret;
 	}
 
 
