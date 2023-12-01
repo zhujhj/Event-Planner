@@ -1,5 +1,6 @@
 package database;
 
+import model.EventModel;
 import model.GuestModel;
 import model.VenueModel;
 import util.PrintablePreparedStatement;
@@ -111,15 +112,15 @@ public class DatabaseConnectionHandler {
 		}
 	}
 
-	public void deleteEvent(String venueName) {
+	public void deleteEvent(int eventID) {
 		try {
-			String query = "DELETE FROM venue WHERE venue_name = ?";
+			String query = "DELETE FROM event WHERE event_id = ?";
 			PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query, false);
-			ps.setString(1, venueName);
+			ps.setInt(1, eventID);
 
 			int rowCount = ps.executeUpdate();
 			if (rowCount == 0) {
-				System.out.println(WARNING_TAG + " Event " + venueName + " does not exist!");
+				System.out.println(WARNING_TAG + " Event " + eventID + " does not exist!");
 			}
 
 			connection.commit();
@@ -186,6 +187,26 @@ public class DatabaseConnectionHandler {
 			ps.setString(2, model.getAddress());
 			ps.setInt(3, model.getCapacity());
 			ps.setInt(4, model.getId());
+
+			ps.executeUpdate();
+			connection.commit();
+
+			ps.close();
+		} catch (SQLException e) {
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+			rollbackConnection();
+		}
+	}
+
+	public void insertEvent(EventModel model) {
+
+		try {
+			String query = "INSERT INTO EVENT VALUES (?,?,?,?)";
+			PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query, false);
+			ps.setString(1, model.getTime());
+			ps.setInt(2, model.getId());
+			ps.setString(3, model.getName());
+			ps.setString(4, model.getDescription());
 
 			ps.executeUpdate();
 			connection.commit();
@@ -353,7 +374,7 @@ public class DatabaseConnectionHandler {
 			String query = "SELECT event_id, SUM(venue_capacity) AS total_capacity " +
 					"FROM VENUE " +
 					"GROUP BY event_id " +
-					"HAVING total_capacity >= ?";
+					"HAVING SUM(venue_capacity) >= ?";
 
 			PreparedStatement ps = connection.prepareStatement(query);
 			ps.setInt(1, minTotalCapacity);
@@ -372,7 +393,7 @@ public class DatabaseConnectionHandler {
 		} catch (SQLException e) {
 			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
 		}
-
+		System.out.println(aggregatedDataMap);
 		return aggregatedDataMap;
 	}
 
@@ -389,9 +410,11 @@ public class DatabaseConnectionHandler {
 			PreparedStatement countPs = connection.prepareStatement(countQuery);
 			ResultSet countRs = countPs.executeQuery();
 
-			// get the average venue count
+//			 get the average venue count
 			String avgQuery = "SELECT AVG(venue_count) AS avg_venue_count " +
 					"FROM (" + countQuery + ") AS event_venue_count";
+
+//			String avgQuery = countQuery;
 
 			PreparedStatement avgPs = connection.prepareStatement(avgQuery);
 			ResultSet avgRs = avgPs.executeQuery();
@@ -407,7 +430,7 @@ public class DatabaseConnectionHandler {
 		} catch (SQLException e) {
 			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
 		}
-
+		System.out.println(result);
 		return result;
 	}
 

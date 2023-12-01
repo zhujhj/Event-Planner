@@ -58,10 +58,17 @@ public class ConsoleUI {
     }
 
     public void deleteVenue() {
-        System.out.println("Delete guest");
+        System.out.println("Delete venue");
         System.out.print("Enter name: ");
         String name = scan.nextLine();
         dbHandler.deleteVenue(name);
+    }
+
+    public void deleteEvent() {
+        System.out.println("Delete event");
+        System.out.print("Enter event id: ");
+        int id = scan.nextInt();
+        dbHandler.deleteEvent(id);
     }
 
     public void updateVenue() {
@@ -195,45 +202,54 @@ public class ConsoleUI {
     public void runUI() {
         Scanner scan = new Scanner(System.in);
         // which action
-        System.out.print("1 for insert, 2 for delete, 3 for update, 4 for join, 5 select, " +
-                "6 for project, 7 for aggregate by GROUP BY, 8 for aggregate by HAVING, " +
-                "9 for nested aggregation, 10 for division: ");
-        String option = scan.nextLine();
-        switch (option) {
-            case "1":
-//                insertGuest();
-                insertVenue();
-                break;
-            case "2":
-//                deleteGuest();
-                deleteVenue();
-                break;
-            case "3":
-                updateVenue();
-                break;
-            case "4":
-                joinVenue();
-                break;
-            case "5":
-                selectVenue();
-                break;
-            case "6":
-                projectVenue();
-            case "7":
-                aggregateByGroupBy();
-                break;
-            case "8":
-                aggregateByHaving();
-                break;
-            case "9":
-                nestedAggregation();
-                break;
-            case "10":
-                division();
-                break;
-            default:
-                System.out.println("Invalid input");
-                break;
+        boolean cont = true;
+        while (cont) {
+            System.out.print("1 for insert, 2 for delete, 3 for update, 4 for join, 5 select, " +
+                    "6 for project, 7 for aggregate by GROUP BY, 8 for aggregate by HAVING, " +
+                    "9 for nested aggregation, 10 for division: ");
+            String option = scan.nextLine();
+            switch (option) {
+                case "1":
+                    //                insertGuest();
+                    insertVenue();
+                    break;
+                case "2":
+                    //                deleteGuest();
+                    //                deleteVenue();
+                    deleteEvent();
+                    break;
+                case "3":
+                    updateVenue();
+                    break;
+                case "4":
+                    joinVenue();
+                    break;
+                case "5":
+                    selectVenue();
+                    break;
+                case "6":
+                    projectVenue();
+                case "7":
+                    aggregateByGroupBy();
+                    break;
+                case "8":
+                    aggregateByHaving();
+                    break;
+                case "9":
+                    nestedAggregation();
+                    break;
+                case "10":
+                    division();
+                    break;
+                default:
+                    System.out.println("Invalid input");
+                    break;
+            }
+            System.out.print("Do you want to continue? (y) ");
+            String repeat = scan.nextLine();
+            if (!repeat.equals("y")) {
+                cont = false;
+            }
         }
     }
 }
