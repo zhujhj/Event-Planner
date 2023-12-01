@@ -32,8 +32,34 @@ public class ConsoleUI {
         dbHandler.insertVenue(venue);
     }
 
+<<<<<<< HEAD
     public void deleteVenue() {
         System.out.println("Delete venue");
+=======
+    public void insertVenue() {
+        System.out.println("Insert venue");
+        System.out.print("Enter name: ");
+        String name = scan.nextLine();
+        System.out.print("Enter address: ");
+        String email = scan.nextLine();
+        System.out.print("Enter capacity: ");
+        int id = scan.nextInt();
+        System.out.print("Enter event ID: ");
+        int phone = scan.nextInt();
+        VenueModel venue = new VenueModel(name, email, id, phone);
+        dbHandler.insertVenue(venue);
+    }
+
+    public void deleteGuest() {
+        System.out.println("Delete guest");
+>>>>>>> c18ca0df0ff69308d3f22052b277182e33ec0fbb
+        System.out.print("Enter name: ");
+        String name = scan.nextLine();
+        dbHandler.deleteVenue(name);
+    }
+
+    public void deleteVenue() {
+        System.out.println("Delete guest");
         System.out.print("Enter name: ");
         String name = scan.nextLine();
         dbHandler.deleteVenue(name);
@@ -110,9 +136,17 @@ public class ConsoleUI {
         String option = scan.nextLine();
         switch (option) {
             case "1":
+<<<<<<< HEAD
                 insertVenue();
                 break;
             case "2":
+=======
+//                insertGuest();
+                insertVenue();
+                break;
+            case "2":
+//                deleteGuest();
+>>>>>>> c18ca0df0ff69308d3f22052b277182e33ec0fbb
                 deleteVenue();
                 break;
             case "3":
