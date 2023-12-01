@@ -90,6 +90,14 @@ public class ConsoleUI {
         dbHandler.aggregateVenueTotalEventMaxAttendance();
     }
 
+    public void aggregateByHaving() {
+        System.out.println("What is the minimum total attendance?: ");
+        int minTotalAttendance = scan.nextInt();
+
+        System.out.println("Getting all events with total attendance greater than specified amount");
+        dbHandler.aggregateVenueCapacityByEventHaving(minTotalAttendance);
+    }
+
     /**
      * TermainalTransactionsDelegate Implementation
      *
@@ -176,6 +184,9 @@ public class ConsoleUI {
                 break;
             case "5":
                 aggregateByGroupBy();
+                break;
+            case "8":
+                aggregateByHaving();
                 break;
             default:
                 System.out.println("Invalid input");

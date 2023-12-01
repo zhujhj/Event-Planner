@@ -321,6 +321,38 @@ public class DatabaseConnectionHandler {
 		return ret;
 	}
 
+	// Finds all events where the total capacity from all venues is greater than the specified amount
+	public Map<Integer, Integer> aggregateVenueCapacityByEventHaving(int minTotalCapacity) {
+		Map<Integer, Integer> aggregatedDataMap = new HashMap<>();
+
+		try {
+			String query = "SELECT event_id, SUM(venue_capacity) AS total_capacity " +
+					"FROM VENUE " +
+					"GROUP BY event_id " +
+					"HAVING total_capacity >= ?";
+
+			PreparedStatement ps = connection.prepareStatement(query);
+			ps.setInt(1, minTotalCapacity);
+
+			ResultSet rs = ps.executeQuery();
+
+			while (rs.next()) {
+				int eventId = rs.getInt("event_id");
+				int totalCapacity = rs.getInt("total_capacity");
+
+				aggregatedDataMap.put(eventId, totalCapacity);
+			}
+
+			rs.close();
+			ps.close();
+		} catch (SQLException e) {
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+		}
+
+		return aggregatedDataMap;
+	}
+
+
 
 
 //	public BranchModel[] getBranchInfo() {
