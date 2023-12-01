@@ -268,33 +268,23 @@ public class DatabaseConnectionHandler {
         return model;
     }
 
-	public void joinVenues(String venue1Name, String venue2Name) {
+	public void joinVenueAndEvent() {
 		try {
-			String query = "SELECT V1.venue_name AS venue1_name, V1.venue_address AS venue1_address, V1.venue_capacity AS venue1_capacity, " +
-					"V2.venue_name AS venue2_name, V2.venue_address AS venue2_address, V2.venue_capacity AS venue2_capacity " +
-					"FROM VENUE V1 " +
-					"JOIN VENUE V2 ON V1.event_id = V2.event_id " +
-					"WHERE V1.venue_name = ? AND V2.venue_name = ? AND V1.venue_name <> V2.venue_name";
+			String query = "SELECT VENUE.venue_name, VENUE.venue_address, VENUE.venue_capacity, EVENT.event_name " +
+					"FROM VENUE " +
+					"JOIN EVENT ON VENUE.event_id = EVENT.event_id";
 
 			PreparedStatement ps = connection.prepareStatement(query);
-			ps.setString(1, venue1Name);
-			ps.setString(2, venue2Name);
-
 			ResultSet rs = ps.executeQuery();
 
 			while (rs.next()) {
-				String venue1NameResult = rs.getString("venue1_name");
-				String venue1Address = rs.getString("venue1_address");
-				int venue1Capacity = rs.getInt("venue1_capacity");
+				String venueName = rs.getString("venue_name");
+				String venueAddress = rs.getString("venue_address");
+				int venueCapacity = rs.getInt("venue_capacity");
+				String eventName = rs.getString("event_name");
 
-				String venue2NameResult = rs.getString("venue2_name");
-				String venue2Address = rs.getString("venue2_address");
-				int venue2Capacity = rs.getInt("venue2_capacity");
-
-				System.out.println("Venue 1: " + venue1NameResult + ", Address: " + venue1Address +
-						", Capacity: " + venue1Capacity);
-				System.out.println("Venue 2: " + venue2NameResult + ", Address: " + venue2Address +
-						", Capacity: " + venue2Capacity);
+				System.out.println("Venue: " + venueName + ", Address: " + venueAddress +
+						", Capacity: " + venueCapacity + ", Event: " + eventName);
 			}
 
 			rs.close();

@@ -80,13 +80,8 @@ public class ConsoleUI {
 
     public void joinVenue() {
         System.out.println("Join venues");
-        System.out.print("Enter venue name 1: ");
-        String name1 = scan.nextLine();
 
-        System.out.print("Enter venue name 2: ");
-        String name2 = scan.nextLine();
-
-        dbHandler.joinVenues(name1, name2);
+        dbHandler.joinVenueAndEvent();
     }
 
     public void aggregateByGroupBy() {
