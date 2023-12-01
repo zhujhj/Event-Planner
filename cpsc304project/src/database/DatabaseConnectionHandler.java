@@ -29,6 +29,8 @@ public class DatabaseConnectionHandler {
 
 	private static boolean duplicate = false;
 
+	private static boolean eventExists = false;
+
 
 	public DatabaseConnectionHandler() {
 		try {
@@ -72,6 +74,35 @@ public class DatabaseConnectionHandler {
 //		}
 	}
 
+	public void updateVenue(String name, String address, int capacity, int eventId) {
+		try {
+			String query = "UPDATE VENUE SET venue_name=?, venue_address=?, venue_capacity=?, event_id=? WHERE venue_name=?";
+			PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query, false);
+
+			ps.setString(1, name);
+			ps.setString(2, address);
+			ps.setInt(3, capacity);
+			ps.setInt(4, eventId);
+			ps.setString(5, name);
+
+
+
+			ps.executeUpdate();
+			eventExists = true;
+			connection.commit();
+
+			ps.close();
+		} catch (SQLException e) {
+			eventExists = false;
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+			rollbackConnection();
+		}
+	}
+
+	public boolean getEventExists() {
+		return eventExists;
+	}
+
 	public void deleteVenue(String venueName) {
 		try {
 			String query = "DELETE FROM venue WHERE venue_name = ?";
@@ -109,13 +140,16 @@ public class DatabaseConnectionHandler {
 			ps.setInt(3, model.getCapacity());
 			ps.setInt(4, model.getId());
 
-			duplicate = false;
+
 			ps.executeUpdate();
 			connection.commit();
+			duplicate = false;
+//			eventExists = true;
 
 			ps.close();
 		} catch (SQLException e) {
 			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+//			eventExists = false;
 			duplicate = true;
 			rollbackConnection();
 		}

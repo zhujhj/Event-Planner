@@ -93,7 +93,11 @@ public class DatabaseModifyPage extends JFrame implements ListSelectionListener 
                 if (dbHandler.getDuplicate()) {
                     toprint = "This venue already exist, please update if needed!";
                 } else {
-                    toprint = "Successfully Added!";
+                    if (dbHandler.getEventExists()) {
+                        toprint = "this eventID doesnt match to any events";
+                    } else {
+                        toprint = "Successfully Added!";
+                    }
                 }
                 JOptionPane.showMessageDialog(null, toprint);
 
@@ -144,6 +148,28 @@ public class DatabaseModifyPage extends JFrame implements ListSelectionListener 
         panel3.add(updateIDTextField);
 
         panel3.add(updateSubmit);
+
+        updateSubmit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                String name = updateNameTextField.getText();
+                String add = updateAddressTextField.getText();
+                int cap = Integer.parseInt(updateCapacityTextField.getText());
+                int id = Integer.parseInt(updateIDTextField.getText());
+                dbHandler.updateVenue(name, add, cap, id);
+                String toprint = "";
+                if (dbHandler.getEventExists()) {
+                    toprint = "It has been updated if it exists in the DB";
+                } else {
+                    toprint = "This event doesnt exist yet :(";
+                }
+                JOptionPane.showMessageDialog(null, toprint);
+
+            }
+        });
+
+
 
 
         // Add panels to the frame
