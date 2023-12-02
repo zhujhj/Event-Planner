@@ -14,7 +14,7 @@ public class ConsoleUI {
     public ConsoleUI() {
         dbHandler = new DatabaseConnectionHandler();
         scan = new Scanner(System.in);
-        databaseSetup();
+//        databaseSetup();
 //        runUI();
     }
 

@@ -38,7 +38,7 @@ public class DatabaseModifyPage extends JFrame implements ListSelectionListener 
 
         // Create panels for each section
 
-        JPanel panel1 = new JPanel();
+        JPanel insertPanel = new JPanel();
 
         JTextField nameTextField = new JTextField(20);
         JTextField addressTextField = new JTextField(20);
@@ -61,25 +61,25 @@ public class DatabaseModifyPage extends JFrame implements ListSelectionListener 
 //        int cap = 0;
 //        int ID = 1;
 
-        panel1.add(new JLabel("Insert"));
-        panel1.add(Box.createHorizontalStrut(500));
-        panel1.add(new JLabel("Name"));
-        panel1.add(nameTextField);
+        insertPanel.add(new JLabel("Insert"));
+        insertPanel.add(Box.createHorizontalStrut(500));
+        insertPanel.add(new JLabel("Name"));
+        insertPanel.add(nameTextField);
 
 
-        panel1.add(Box.createHorizontalStrut(50));
-        panel1.add(new JLabel("Address"));
-        panel1.add(addressTextField);
+        insertPanel.add(Box.createHorizontalStrut(50));
+        insertPanel.add(new JLabel("Address"));
+        insertPanel.add(addressTextField);
 
-        panel1.add(Box.createHorizontalStrut(50));
-        panel1.add(new JLabel("Capacity"));
-        panel1.add(capacityTextField);
+        insertPanel.add(Box.createHorizontalStrut(50));
+        insertPanel.add(new JLabel("Capacity"));
+        insertPanel.add(capacityTextField);
 
-        panel1.add(Box.createHorizontalStrut(65));
-        panel1.add(new JLabel("ID"));
-        panel1.add(IDTextField);
+        insertPanel.add(Box.createHorizontalStrut(65));
+        insertPanel.add(new JLabel("ID"));
+        insertPanel.add(IDTextField);
 
-        panel1.add(insertSubmit);
+        insertPanel.add(insertSubmit);
         insertSubmit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -102,12 +102,12 @@ public class DatabaseModifyPage extends JFrame implements ListSelectionListener 
             }
         });
 
-        JPanel panel2 = new JPanel();
-        panel2.add(new JLabel("Delete"));
-        panel2.add(Box.createHorizontalStrut(500));
-        panel2.add(new JLabel("Name"));
-        panel2.add(deleteTextField);
-        panel2.add(deleteSubmit);
+        JPanel deletePanel = new JPanel();
+        deletePanel.add(new JLabel("Delete"));
+        deletePanel.add(Box.createHorizontalStrut(500));
+        deletePanel.add(new JLabel("Name"));
+        deletePanel.add(deleteTextField);
+        deletePanel.add(deleteSubmit);
 
         deleteSubmit.addActionListener(new ActionListener() {
             @Override
@@ -125,26 +125,26 @@ public class DatabaseModifyPage extends JFrame implements ListSelectionListener 
         });
 
 
-        JPanel panel3 = new JPanel();
-        panel3.add(new JLabel("Update"));
-        panel3.add(Box.createHorizontalStrut(500));
-        panel3.add(new JLabel("Name"));
-        panel3.add(updateNameTextField);
+        JPanel updatePanel = new JPanel();
+        updatePanel.add(new JLabel("Update"));
+        updatePanel.add(Box.createHorizontalStrut(500));
+        updatePanel.add(new JLabel("Name"));
+        updatePanel.add(updateNameTextField);
 
 
-        panel3.add(Box.createHorizontalStrut(50));
-        panel3.add(new JLabel("Address"));
-        panel3.add(updateAddressTextField);
+        updatePanel.add(Box.createHorizontalStrut(50));
+        updatePanel.add(new JLabel("Address"));
+        updatePanel.add(updateAddressTextField);
 
-        panel3.add(Box.createHorizontalStrut(50));
-        panel3.add(new JLabel("Capacity"));
-        panel3.add(updateCapacityTextField);
+        updatePanel.add(Box.createHorizontalStrut(50));
+        updatePanel.add(new JLabel("Capacity"));
+        updatePanel.add(updateCapacityTextField);
 
-        panel3.add(Box.createHorizontalStrut(65));
-        panel3.add(new JLabel("ID"));
-        panel3.add(updateIDTextField);
+        updatePanel.add(Box.createHorizontalStrut(65));
+        updatePanel.add(new JLabel("ID"));
+        updatePanel.add(updateIDTextField);
 
-        panel3.add(updateSubmit);
+        updatePanel.add(updateSubmit);
 
         updateSubmit.addActionListener(new ActionListener() {
             @Override
@@ -167,11 +167,27 @@ public class DatabaseModifyPage extends JFrame implements ListSelectionListener 
             }
         });
 
+        JPanel switchScreenButtonPanel = new JPanel();
+
+        JButton selAndProj = new JButton("Selection and Projection");
+
+        switchScreenButtonPanel.add(selAndProj);
+
+        selAndProj.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                insertPanel.setVisible(false);
+                deletePanel.setVisible(false);
+                updatePanel.setVisible(false);
+                switchScreenButtonPanel.setVisible(false);
+            }
+        });
 
         // Add panels to the frame
-        add(panel1);
-        add(panel2);
-        add(panel3);
+        add(insertPanel);
+        add(deletePanel);
+        add(updatePanel);
+        add(switchScreenButtonPanel);
 
     }
     //This method is required by ListSelectionListener.
