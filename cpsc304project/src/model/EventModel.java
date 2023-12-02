@@ -6,9 +6,9 @@ public class EventModel {
     private final String name;
 	private final String description;
 	private final int id;
-    private final DateTimeAtCompleted time;
+    private final String time;
 	
-	public EventModel(String name, String description, int id, DateTimeAtCompleted time) {
+	public EventModel(String name, String description, int id, String time) {
 		this.name = name;
 		this.description = description;
         this.id = id;
@@ -27,7 +27,7 @@ public class EventModel {
 		return id;
 	}
 
-    public DateTimeAtCompleted getTime() {
+    public String getTime() {
         return time;
     }
 }

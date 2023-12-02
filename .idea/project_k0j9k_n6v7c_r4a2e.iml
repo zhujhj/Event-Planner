@@ -5,15 +5,7 @@
     <content url="file://$MODULE_DIR$" />
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$USER_HOME$/Downloads/CPSC304_Java_Project-master/resources/ojdbc8.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="library" name="ojdbc81" level="application" />
+    <orderEntry type="library" exported="" name="ojdbc81" level="application" />
+    <orderEntry type="library" name="ojdbc8" level="application" />
   </component>
 </module>
