@@ -49,7 +49,7 @@ CREATE TABLE Department (
 CREATE TABLE Venue (
                        venue_name VARCHAR2(255),
                        venue_address VARCHAR2(255),
-                       capacity INTEGER,
+                       venue_capacity INTEGER,
                        event_id INTEGER,
                        PRIMARY KEY (venue_name, venue_address, event_id),
                        FOREIGN KEY (event_id) REFERENCES EVENT

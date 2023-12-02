@@ -4,9 +4,7 @@ import database.DatabaseConnectionHandler;
 import model.GuestModel;
 import model.VenueModel;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 public class ConsoleUI {
 
@@ -108,9 +106,13 @@ public class ConsoleUI {
 
     public void projectVenue() {
         System.out.println("Project venue");
-        System.out.println("Enter venue name: ");
+        System.out.print("Enter venue name: ");
         String venueName = scan.nextLine();
-        dbHandler.projectVenue(venueName, null);
+        List<String> columns = new ArrayList<>();
+        System.out.print("Enter columns separated by spaces: ");
+        String columnsString = scan.nextLine();
+        columns = List.of(columnsString.split(" "));
+        dbHandler.projectVenue(venueName, columns);
     }
 
     public void aggregateByHaving() {
