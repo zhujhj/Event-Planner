@@ -28,13 +28,13 @@ public class DatabaseModifyPage extends JFrame implements ListSelectionListener 
 
 
         setTitle("Simple GUI");
-        setSize(800, 400);
+        setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         createAndShowUI();
     }
     public void createAndShowUI() {
 
-        setLayout(new GridLayout(2, 2));
+        setLayout(new GridLayout(3, 3));
 
         // Create panels for each section
 
@@ -169,6 +169,36 @@ public class DatabaseModifyPage extends JFrame implements ListSelectionListener 
             }
         });
 
+        JPanel selectionPanel = new JPanel();
+
+        JTextField selectionTextField = new JTextField(20);
+        JButton selectionSubmit = new JButton("submit");
+
+        selectionSubmit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String name = selectionTextField.getText();
+                VenueModel currVenue = dbHandler.selectVenue(name);
+                String toprint = "";
+
+                if (currVenue != null) {
+                    toprint = "Venue name: " + currVenue.getName() + " Venue address: " + currVenue.getAddress()
+                            + " Venue Capacity: " + currVenue.getCapacity() + " Event ID: " + currVenue.getId();
+                } else {
+                    toprint = "this venue name does not exist";
+                }
+                JOptionPane.showMessageDialog(null, toprint);
+            }
+        });
+
+        selectionPanel.add(new JLabel("Selection"));
+        selectionPanel.add(Box.createHorizontalStrut(500));
+        selectionPanel.add(new JLabel("Name"));
+        selectionPanel.add(selectionTextField);
+        selectionPanel.add(selectionSubmit);
+
+
+
 
 
 
@@ -176,6 +206,8 @@ public class DatabaseModifyPage extends JFrame implements ListSelectionListener 
         add(panel1);
         add(panel2);
         add(panel3);
+        add(selectionPanel);
+
 
     }
     //This method is required by ListSelectionListener.

@@ -1,3 +1,6 @@
+
+
+
 package controller;
 
 //import consoleui.ConsoleUI;
@@ -13,7 +16,7 @@ import java.util.Scanner;
 
 public class Controller {
     private DatabaseConnectionHandler dbHandler = null;
-//    private ConsoleUI cui;
+    //    private ConsoleUI cui;
     private DatabaseModifyPage gui;
 //    private LoginWindow loginWindow = null;
 

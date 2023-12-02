@@ -28,6 +28,7 @@ public class DatabaseConnectionHandler {
 	private DatabaseConnectionHandler dbHandler = null;
 
 	private static boolean duplicate = false;
+	private static boolean selectable = true;
 
 	private static boolean eventExists = false;
 
@@ -42,6 +43,41 @@ public class DatabaseConnectionHandler {
 		} catch (SQLException e) {
 			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
 		}
+	}
+
+	public VenueModel selectVenue(String venueName) {
+		VenueModel venue = null;
+		try {
+			String query = "SELECT * FROM VENUE WHERE VENUE_NAME=?";
+			PreparedStatement ps = connection.prepareStatement(query);
+			ps.setString(1, venueName);
+
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				venue = new VenueModel(
+						rs.getString("venue_name"),
+						rs.getString("venue_address"),
+						rs.getInt("venue_capacity"),
+						rs.getInt("event_id")
+				);
+			}
+			selectable = true;
+
+			rs.close();
+			ps.close();
+		} catch (SQLException e) {
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+			selectable = false;
+			rollbackConnection();
+
+		}
+
+
+		return venue;
+	}
+
+	public boolean getSelectable() {
+		return selectable;
 	}
 
 	public void close() {
