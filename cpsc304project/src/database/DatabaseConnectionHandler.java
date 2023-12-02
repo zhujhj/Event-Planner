@@ -269,111 +269,78 @@ public class DatabaseConnectionHandler {
 		return venue;
 	}
 
-	public VenueModel projectVenue(String venueName, List<String> columns) {
+	public List<List> projectVenue(String venueName, List<String> columns) {
 
         VenueModel model = null;
+        List<List> columnLists = null;
         try {
-			String columnsString = columns.toString().substring(1, columns.toString().length() - 1);
-			System.out.println(columnsString);
+            String columnsString = columns.toString().substring(1, columns.toString().length() - 1);
+            System.out.println(columnsString);
             String query = "SELECT " + columnsString + " FROM VENUE";
 //			String query = "SELECT * FROM VENUE";
-			System.out.println(query);
+            System.out.println(query);
             PreparedStatement ps = connection.prepareStatement(query);
 //            ps.setString(1, venueName);
 
             ResultSet rs = ps.executeQuery();
 
-			System.out.println(rs.next());
+            System.out.println(rs.next());
 
             String name = null;
             String address = null;
             int capacity = 0;
             int eventId = 0;
 
-			List<VenueModel> venues = new ArrayList<>();
+//			List<VenueModel> venues = new ArrayList<>();
 
-			List<String> venueNames = new ArrayList<>();
-			List<String> venueAddresses = new ArrayList<>();
-			List<Integer> venueCapacities = new ArrayList<>();
-			List<Integer> venueIDs = new ArrayList<>();
+            List<String> venueNames = new ArrayList<>();
+            List<String> venueAddresses = new ArrayList<>();
+            List<Integer> venueCapacities = new ArrayList<>();
+            List<Integer> venueIDs = new ArrayList<>();
+            columnLists = new ArrayList<>();
 
-			do {
-				if (columnsString.contains("venue_name")) {
-					venueNames.add(rs.getString("venue_name"));
-				}
-				if (columnsString.contains("venue_address")) {
-					venueAddresses.add(rs.getString("venue_address"));
-				}
-				if (columnsString.contains("venue_capacity")) {
-					venueCapacities.add(rs.getInt("venue_capacity"));
-				}
-				if (columnsString.contains("event_id")) {
-					venueIDs.add(rs.getInt("event_id"));
-				}
-			} while (rs.next());
+            do {
+                if (columnsString.contains("venue_name")) {
+                    venueNames.add(rs.getString("venue_name"));
+                }
+                if (columnsString.contains("venue_address")) {
+                    venueAddresses.add(rs.getString("venue_address"));
+                }
+                if (columnsString.contains("venue_capacity")) {
+                    venueCapacities.add(rs.getInt("venue_capacity"));
+                }
+                if (columnsString.contains("event_id")) {
+                    venueIDs.add(rs.getInt("event_id"));
+                }
+            } while (rs.next());
 
-//			do {
-//				VenueModel venue = new VenueModel(
-//						rs.getString("venue_name"),
-//						rs.getString("venue_address"),
-//						rs.getInt("venue_capacity"),
-//						rs.getInt("event_id")
-//				);
-//				venues.add(venue);
-//			} while (rs.next());
+            columnLists.add(venueNames);
+            columnLists.add(venueAddresses);
+            columnLists.add(venueCapacities);
+            columnLists.add(venueIDs);
 
-//			for (VenueModel v : venues) {
-//				System.out.println(v.getName());
-//				System.out.println(v.getAddress());
-//				System.out.println(v.getCapacity());
-//				System.out.println(v.getId());
-//			}
-//			System.out.println(venues.size());
-			for (int i = 0; i < 3; i++) {
-				if (!venueNames.isEmpty()) {
-					System.out.println(venueNames.get(i));
-				}
-				if (!venueAddresses.isEmpty()) {
-					System.out.println(venueAddresses.get(i));
-				}
-				if (!venueCapacities.isEmpty()) {
-					System.out.println(venueCapacities.get(i));
-				}
-				if (!venueIDs.isEmpty()) {
-					System.out.println(venueIDs.get(i));
-				}
-			}
-
-//            if (rs.next()) {
-//                for (String column : columns) {
-//                    switch (column) {
-//                        case "venue_name":
-//                            name = rs.getString("venue_name");
-//                            break;
-//                        case "venue_address":
-//                            address = rs.getString("venue_address");
-//                            break;
-//                        case "venue_capacity":
-//                            capacity = rs.getInt("venue_capacity");
-//                            break;
-//                        case "event_id":
-//                            eventId = rs.getInt("event_id");
-//                            break;
-//                    }
-//                }
-//
-//                // Close resources
-//                rs.close();
-//                ps.close();
-//            }
-			rs.close();
-			ps.close();
-            model = new VenueModel(name, address, capacity, eventId);
+            for (int i = 0; i < 5; i++) {
+                if (!venueNames.isEmpty()) {
+                    System.out.println(venueNames.get(i));
+                }
+                if (!venueAddresses.isEmpty()) {
+                    System.out.println(venueAddresses.get(i));
+                }
+                if (!venueCapacities.isEmpty()) {
+                    System.out.println(venueCapacities.get(i));
+                }
+                if (!venueIDs.isEmpty()) {
+                    System.out.println(venueIDs.get(i));
+                }
+            }
+            rs.close();
+            ps.close();
+//            model = new VenueModel(name, address, capacity, eventId);
         } catch (SQLException e) {
             System.out.println(EXCEPTION_TAG + " " + e.getMessage());
-			e.printStackTrace();
+            e.printStackTrace();
         }
-        return model;
+        return columnLists;
     }
 
 	public void joinVenueAndEvent() {
@@ -492,6 +459,7 @@ public class DatabaseConnectionHandler {
 			avgPs.close();
 		} catch (SQLException e) {
 			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+			e.printStackTrace();
 		}
 		System.out.println(result);
 		return result;

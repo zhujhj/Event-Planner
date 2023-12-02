@@ -20,14 +20,14 @@ public class Controller {
     public Controller() {
         dbHandler = new DatabaseConnectionHandler();
         cui = new ConsoleUI();
-        dbmp = new DatabaseModifyPage();
+//        dbmp = new DatabaseModifyPage();
     }
 
     private void start() {
 //        loginWindow = new LoginWindow();
 //        loginWindow.showFrame(this);
         System.out.println("Hello");
-//        cui.runUI();
+        cui.runUI();
     }
 
     public static void main(String[] args) {
