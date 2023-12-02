@@ -2,8 +2,14 @@ package ui;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.*;
 import javax.swing.event.*;
+import javax.swing.JCheckBox;
+import javax.swing.SwingUtilities;
+import javax.swing.JTable;
+import javax.swing.JScrollPane;
 
 import database.DatabaseConnectionHandler;
 import model.VenueModel;
@@ -28,13 +34,13 @@ public class DatabaseModifyPage extends JFrame implements ListSelectionListener 
 
 
         setTitle("Simple GUI");
-        setSize(800, 600);
+        setSize(800, 800);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         createAndShowUI();
     }
     public void createAndShowUI() {
 
-        setLayout(new GridLayout(3, 3));
+        setLayout(new GridLayout(4, 3));
 
         // Create panels for each section
 
@@ -197,7 +203,105 @@ public class DatabaseModifyPage extends JFrame implements ListSelectionListener 
         selectionPanel.add(selectionTextField);
         selectionPanel.add(selectionSubmit);
 
+        JPanel projectionPanel = new JPanel();
+        JCheckBox namebox = new JCheckBox("Venue Name");
+        JCheckBox addressbox = new JCheckBox("Venue Address");
+        JCheckBox capbox = new JCheckBox("Venue Capacity");
+        JCheckBox idbox = new JCheckBox("Event ID");
 
+        JButton projectionSubmit = new JButton("submit");
+
+        projectionPanel.add(new JLabel("Projection"));
+        projectionPanel.add(namebox);
+        projectionPanel.add(addressbox);
+        projectionPanel.add(capbox);
+        projectionPanel.add(idbox);
+        projectionPanel.add(projectionSubmit);
+
+        projectionSubmit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                boolean nameSelected = namebox.isSelected();
+                boolean addressSelected = addressbox.isSelected();
+                boolean capSelected = capbox.isSelected();
+                boolean idSelected = idbox.isSelected();
+
+                List<String> listOfString = new ArrayList<>();
+
+                if (nameSelected) {
+                    listOfString.add("venue_name");
+                }
+
+                if (addressSelected) {
+                    listOfString.add("venue_address");
+                }
+
+                if (capSelected) {
+                    listOfString.add("venue_capacity");
+                }
+
+                if (idSelected) {
+                    listOfString.add("event_id");
+                }
+
+                List<List> toSelect = dbHandler.projectVenue(listOfString);
+
+
+                System.out.println(toSelect.get(0));
+                JOptionPane.showMessageDialog(null, toSelect);
+
+
+            }
+        });
+
+        // aggregation with group by
+
+        JPanel groupBy = new JPanel();
+        JButton groupBySubmit = new JButton("Submit");
+        JLabel groupByDescription = new JLabel("Get total attendance per event");
+        groupBySubmit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println(dbHandler.aggregateVenueTotalEventMaxAttendance());
+                JOptionPane.showMessageDialog(null, dbHandler.aggregateVenueTotalEventMaxAttendance());
+            }
+        });
+
+        groupBy.add(groupByDescription);
+        groupBy.add(groupBySubmit);
+
+        // aggregation with having
+
+        JPanel having = new JPanel();
+        JButton havingSubmit = new JButton("Submit");
+        JLabel havingDescription = new JLabel("Enter minimum attendance");
+        JTextField havingTextField = new JTextField(20);
+
+        having.add(havingTextField);
+        having.add(havingDescription);
+        having.add(havingSubmit);
+        havingSubmit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int minCapacity = Integer.parseInt(havingTextField.getText());
+                JOptionPane.showMessageDialog(null, dbHandler.aggregateVenueCapacityByEventHaving(minCapacity));
+            }
+        });
+
+        JPanel divisionPanel = new JPanel();
+        divisionPanel.add(new JLabel("Division"));
+        divisionPanel.add(Box.createHorizontalStrut(500));
+        JButton divisionButton = new JButton("get the average number of venues used by all events");
+        divisionPanel.add(divisionButton);
+
+        divisionButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+//                String toReturn = String.valueOf(dbHandler.averageVenueCapacity());
+//                JOptionPane.showMessageDialog(null, toReturn);
+
+            }
+        });
 
 
 
@@ -207,6 +311,10 @@ public class DatabaseModifyPage extends JFrame implements ListSelectionListener 
         add(panel2);
         add(panel3);
         add(selectionPanel);
+        add(projectionPanel);
+        add(groupBy);
+        add(having);
+        add(divisionPanel);
 
 
     }
