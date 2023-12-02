@@ -138,7 +138,7 @@ public class ConsoleUI {
     }
 
     /**
-     * TermainalTransactionsDelegate Implementation
+     * TermainalTransactionsDelegate Implementation\
      *
      * Update the branch name for a specific ID
      */
