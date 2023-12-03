@@ -29,6 +29,10 @@ public class DatabaseConnectionHandler {
 	private Connection connection = null;
 	private DatabaseConnectionHandler dbHandler = null;
 
+	private static boolean eventExists = false;
+	private static int rowCount = 0;
+	private static boolean duplicate = false;
+
 	public DatabaseConnectionHandler() {
 		try {
 			// Load the Oracle JDBC driver
@@ -98,15 +102,17 @@ public class DatabaseConnectionHandler {
 			PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query, false);
 			ps.setString(1, venueName);
 
-			int rowCount = ps.executeUpdate();
+			rowCount = ps.executeUpdate();
 			if (rowCount == 0) {
 				System.out.println(WARNING_TAG + " Venue " + venueName + " does not exist!");
 			}
 
+			eventExists = true;
 			connection.commit();
 
 			ps.close();
 		} catch (SQLException e) {
+			eventExists = false;
 			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
 			rollbackConnection();
 		}
@@ -167,18 +173,18 @@ public class DatabaseConnectionHandler {
 
 	public void insertVenue(VenueModel model) {
 
-		try {
-			String q = "INSERT INTO EVENT VALUES ('10',2,'event 2','event 2')";
-			PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(q), q, false);
-
-			ps.executeUpdate();
-			connection.commit();
-
-			ps.close();
-		} catch (SQLException e) {
-			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
-			rollbackConnection();
-		}
+//		try {
+//			String q = "INSERT INTO EVENT VALUES ('10',2,'event 2','event 2')";
+//			PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(q), q, false);
+//
+//			ps.executeUpdate();
+//			connection.commit();
+//
+//			ps.close();
+//		} catch (SQLException e) {
+//			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+//			rollbackConnection();
+//		}
 
 		try {
 			String query = "INSERT INTO VENUE VALUES (?,?,?,?)";
@@ -189,10 +195,12 @@ public class DatabaseConnectionHandler {
 			ps.setInt(4, model.getId());
 
 			ps.executeUpdate();
+			duplicate = false;
 			connection.commit();
 
 			ps.close();
 		} catch (SQLException e) {
+			duplicate = true;
 			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
 			rollbackConnection();
 		}
@@ -230,10 +238,12 @@ public class DatabaseConnectionHandler {
 			ps.setString(5, name);
 
 			ps.executeUpdate();
+			eventExists = true;
 			connection.commit();
 
 			ps.close();
 		} catch (SQLException e) {
+			eventExists = false;
 			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
 			rollbackConnection();
 		}
@@ -261,10 +271,10 @@ public class DatabaseConnectionHandler {
 		} catch (SQLException e) {
 			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
 		}
-		System.out.println(venue.getName());
-		System.out.println(venue.getAddress());
-		System.out.println(venue.getCapacity());
-		System.out.println(venue.getId());
+//		System.out.println(venue.getName());
+//		System.out.println(venue.getAddress());
+//		System.out.println(venue.getCapacity());
+//		System.out.println(venue.getId());
 
 		return venue;
 	}
@@ -340,6 +350,7 @@ public class DatabaseConnectionHandler {
             System.out.println(EXCEPTION_TAG + " " + e.getMessage());
             e.printStackTrace();
         }
+		System.out.println(columnLists);
         return columnLists;
     }
 
@@ -369,8 +380,9 @@ public class DatabaseConnectionHandler {
 		}
 	}
 
-	public Map<Integer, Integer> aggregateVenueTotalEventMaxAttendance() {
+	public String aggregateVenueTotalEventMaxAttendance() {
 		Map<Integer, Integer> ret = new HashMap<>();
+		String returnString = "";
 
 		try {
 			String query = "SELECT event_id, SUM(venue_capacity) AS total_capacity " +
@@ -384,7 +396,8 @@ public class DatabaseConnectionHandler {
 				int eventId = rs.getInt("event_id");
 				int totalCapacity = rs.getInt("total_capacity");
 
-				System.out.println("Event ID: " + eventId + ", Total Capacity: " + totalCapacity);
+				System.out.println("Event ID: " + eventId + ", Total Capacity: " + totalCapacity + "\n");
+				returnString = returnString.concat("Event ID: " + eventId + ", Total Capacity: " + totalCapacity + "\n");
 				ret.put(eventId, totalCapacity);
 			}
 
@@ -393,12 +406,14 @@ public class DatabaseConnectionHandler {
 		} catch (SQLException e) {
 			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
 		}
-		return ret;
+		System.out.println(returnString);
+		return returnString;
 	}
 
 	// Finds all events where the total capacity from all venues is greater than the specified amount
-	public Map<Integer, Integer> aggregateVenueCapacityByEventHaving(int minTotalCapacity) {
+	public String aggregateVenueCapacityByEventHaving(int minTotalCapacity) {
 		Map<Integer, Integer> aggregatedDataMap = new HashMap<>();
+		String returnString = "";
 
 		try {
 			String query = "SELECT event_id, SUM(venue_capacity) AS total_capacity " +
@@ -416,6 +431,7 @@ public class DatabaseConnectionHandler {
 				int totalCapacity = rs.getInt("total_capacity");
 
 				aggregatedDataMap.put(eventId, totalCapacity);
+				returnString = returnString.concat("Event ID: " + eventId + " , Total Capacity: " + totalCapacity + "\n");
 			}
 
 			rs.close();
@@ -424,7 +440,8 @@ public class DatabaseConnectionHandler {
 			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
 		}
 		System.out.println(aggregatedDataMap);
-		return aggregatedDataMap;
+		System.out.println(returnString);
+		return returnString;
 	}
 
 	// returns the average number of venues used by all events
@@ -441,8 +458,23 @@ public class DatabaseConnectionHandler {
 			ResultSet countRs = countPs.executeQuery();
 
 //			 get the average venue count
-			String avgQuery = "SELECT AVG(venue_count) AS avg_venue_count " +
-					"FROM (" + countQuery + ") AS event_venue_count";
+//			String avgQuery = "SELECT AVG(venue_count) AS avg_venue_count " +
+//					"FROM (" + countQuery + ") AS event_venue_count";
+
+//			String avgQuery = "SELECT AVG(venue_count) AS avg_venue_count " +
+//					"FROM (" + "SELECT event_id, COUNT(venue_name) AS venue_count " +
+//					"FROM VENUE " +
+//					"GROUP BY event_id" + ") AS event_venue_count";
+
+//			String avgQuery = "SELECT AVG(avg_venue_capacity) AS overall_average " +
+//					"FROM (SELECT event_id, AVG(venue_capacity) AS avg_venue_capacity " +
+//					"FROM VENUE GROUP BY event_id) event_avg_capacities_alias;";
+//
+//			avgQuery = "SELECT event_id, COUNT(venue_name) AS venue_count " +
+//					"FROM VENUE " +
+//					"GROUP BY event_id";
+
+			String avgQuery = "SELECT MIN(avg_venue_capacity) as avg_count FROM (SELECT event_id, AVG(venue_capacity) as avg_venue_capacity FROM VENUE GROUP BY event_id)";
 
 //			String avgQuery = countQuery;
 
@@ -450,7 +482,7 @@ public class DatabaseConnectionHandler {
 			ResultSet avgRs = avgPs.executeQuery();
 
 			if (avgRs.next()) {
-				result = avgRs.getInt("avg_venue_count");
+				result = avgRs.getInt("avg_count");
 			}
 
 			countRs.close();
@@ -468,6 +500,7 @@ public class DatabaseConnectionHandler {
 	// Returns average event capacity for each different event
 	public Map<Integer, Double> calculateAverageCapacityPerEvent() {
 		Map<Integer, Double> result = new HashMap<>();
+		String returnString = "";
 
 		try {
 			// total capacity for each event
@@ -650,11 +683,15 @@ public class DatabaseConnectionHandler {
 		}
 	}
 
-	public int getRowCount() {
-		return 0;
-	}
 
 	public boolean getDuplicate() {
-		return true;
+		return duplicate;
+	}
+	public boolean getEventExists() {
+		return eventExists;
+	}
+
+	public int getRowCount() {
+		return rowCount;
 	}
 }
