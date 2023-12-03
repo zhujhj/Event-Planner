@@ -1,6 +1,6 @@
 CREATE TABLE Guest (
-                       guest_name VARCHAR2(20),
-                       email VARCHAR2(20),
+                       guest_name VARCHAR2(255),
+                       email VARCHAR2(255),
                        ticket_number INTEGER,
                        phone_number INTEGER,
                        PRIMARY KEY (guest_name, ticket_number)
